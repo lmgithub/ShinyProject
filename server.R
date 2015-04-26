@@ -8,7 +8,10 @@ shinyServer(function(input, output) {
     output$topCountries <- renderTable({
         # select data by year and age group
         dsTmp <- subset(ds, Gender==input$gender & Year==input$year & Age.groups==input$age, select=c(Country, value, Rate))
-        dsTmp <- head(dsTmp[order(-dsTmp$Rate), ], input$top)
+        # dsTmp <- head(dsTmp[order(-dsTmp$Rate), ], input$top)
+        dsTmp <- dsTmp[order(-dsTmp$Rate), ]
+        dsTmp <- dsTmp[1:input$top, ]
+        dsTmp$value <- format(round(dsTmp$value/1000, 0), big.mark=",", scientific=FALSE)
         names(dsTmp) <- c("Country", paste(input$gender, "(in thousands)"), "% of population")
         dsTmp
     })
